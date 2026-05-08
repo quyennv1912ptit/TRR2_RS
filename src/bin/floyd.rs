@@ -1,4 +1,5 @@
 use my_app::scanner::Scanner;
+use std::fs;
 
 const INF: i32 = 10000;
 
@@ -22,7 +23,8 @@ fn find_path(u: usize, v: usize, next: &Vec<Vec<usize>>) -> Option<Vec<usize>> {
 }
 
 fn main() {
-    let mut input = Scanner::new();
+    let buffer = fs::read_to_string("DN.INP").expect("Error: could not open file");
+    let mut input = Scanner::from_string(buffer);
     let n: usize = input.next();
     let u: usize = input.next();
     let v: usize = input.next();
@@ -52,13 +54,17 @@ fn main() {
 
     let path = find_path(u, v, &next);
 
+    let mut out = String::new();
+
     if let Some(path) = path {
-        println!("{}", d[u][v]);
+        out.push_str(&format!("{}\n", d[u][v]));
         for v in &path {
-            print!("{} ", v);
+            out.push_str(&format!("{} ", v));
         }
-        println!();
+        out.push_str("\n");
     } else {
-        println!("0");
+        out.push_str("0\n");
     }
+
+    fs::write("DN.OUT", out).expect("Error: could not write file");
 }

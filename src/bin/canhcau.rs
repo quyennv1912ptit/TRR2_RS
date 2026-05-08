@@ -1,5 +1,5 @@
 use my_app::scanner::Scanner;
-use std::cmp::min;
+use std::{cmp::min, fs};
 
 fn dfs(
     u: usize,
@@ -23,7 +23,7 @@ fn dfs(
             low[u] = min(low[u], low[v]);
 
             if low[v] > num[u] {
-                let e = if u < v {(u,v)} else {(v, u)};
+                let e = if u < v { (u, v) } else { (v, u) };
                 es.push(e);
             }
         } else {
@@ -33,7 +33,8 @@ fn dfs(
 }
 
 fn main() {
-    let mut input = Scanner::new();
+    let buffer = fs::read_to_string("TK.INP").expect("Error: could not open file");
+    let mut input = Scanner::from_string(buffer);
     let n: usize = input.next();
 
     let mut adj = vec![Vec::new(); n + 1];
@@ -54,22 +55,18 @@ fn main() {
 
     for v in 1..=n {
         if num[v] == 0 {
-            dfs(
-                v,
-                v,
-                &adj,
-                &mut num,
-                &mut low,
-                &mut time_dfs,
-                &mut es,
-            );
+            dfs(v, v, &adj, &mut num, &mut low, &mut time_dfs, &mut es);
         }
     }
 
     es.sort();
 
-    println!("{}", es.len());
+    let mut out = String::new();
+
+    out.push_str(&format!("{}\n", es.len()));
     for &(u, v) in &es {
-        println!("{} {}", u, v);
+        out.push_str(&format!("{} {}\n", u, v));
     }
+
+    fs::write("TK.OUT", out).expect("Error: could not write file");
 }

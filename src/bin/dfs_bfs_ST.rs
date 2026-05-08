@@ -1,5 +1,6 @@
 use my_app::scanner::Scanner;
 use std::collections::VecDeque;
+use std::fs;
 
 fn dfs(u: usize, adj: &Vec<Vec<usize>>, vi: &mut Vec<bool>, es: &mut Vec<(usize, usize)>) {
     vi[u] = true;
@@ -29,7 +30,8 @@ fn bfs(s: usize, adj: &Vec<Vec<usize>>, vi: &mut Vec<bool>, es: &mut Vec<(usize,
 }
 
 fn main() {
-    let mut input = Scanner::new();
+    let buffer = fs::read_to_string("CK.INP").expect("Error: could not open file");
+    let mut input = Scanner::from_string(buffer);
     let q: usize = input.next();
     let n: usize = input.next();
     let s: usize = input.next();
@@ -53,9 +55,13 @@ fn main() {
         bfs(s, &adj, &mut vi, &mut es);
     }
 
-    println!("{}", es.len());
+    let mut out = String::new();
+
+    out.push_str(&format!("{}", es.len()));
 
     for (u, v) in &es {
-        println!("{} {}", u, v);
+        out.push_str(&format!("{} {}", u, v));
     }
+
+    fs::write("CK.OUT", out).expect("Error: could not write file");
 }

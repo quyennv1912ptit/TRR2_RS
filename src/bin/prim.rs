@@ -3,6 +3,7 @@ use std::{
     cmp::{Reverse, max, min},
     collections::BinaryHeap,
     vec,
+    fs,
 };
 
 const INF: usize = 10000;
@@ -56,7 +57,8 @@ fn prim(
 
 #[allow(unused_variables)]
 fn main() {
-    let mut cin = Scanner::new();
+    let buffer = fs::read_to_string("CK.INP").expect("Error: could not open file");
+    let mut cin = Scanner::from_string(buffer);
     let n: usize = cin.next();
     let s: usize = cin.next();
     let mut graph: Vec<Vec<(usize, usize)>> = vec![Vec::new(); n + 1];
@@ -74,9 +76,13 @@ fn main() {
     let ans = prim(s, n, &graph, &mut edges);
     // edges.sort();
 
-    println!("{}", ans);
+    let mut out = String::new();
+
+    out.push_str(&format!("{}\n", ans));
 
     for (u, v, w) in &edges {
-        println!("{} {} {}", u, v, w);
+        out.push_str(&format!("{} {} {}\n", u, v, w));
     }
+
+    fs::write("CK.OUT", out).expect("Error: could not write file");
 }
